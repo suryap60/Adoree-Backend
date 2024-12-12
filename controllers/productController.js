@@ -1,4 +1,5 @@
 import Product from "../models/productSchema.js"
+import { Model } from "mongoose";
 
 
 const postProducts = async (req,res )=>{
@@ -26,8 +27,10 @@ const getProducts = async (req,res)=>{
 
 
     try{
+        
         const products = await Product.find()
         console.log(products)
+        
 
     if(products.length === 0 ){
         return res.status(401).json({message:"No Products Found"})
@@ -40,4 +43,29 @@ const getProducts = async (req,res)=>{
     }
 } 
 
-export {getProducts,postProducts}
+const getProductDetails = async(req,res)=>{
+
+    try{
+    
+    const productId = req.params.id
+    // const userName =req.query.name
+
+    const products = await Product.findById(productId)
+    console.log(products)
+
+    if(!products){
+        return res.status(401).json({message:"No Product Found"})
+    }
+
+    res.status(201).json({message:'successfully get products',product:products})
+    
+
+
+    }catch(error){
+        res.status(401).json({error:error.message})
+    }
+
+
+}
+
+export {getProducts,postProducts,getProductDetails}

@@ -1,12 +1,14 @@
 import express from 'express'
 import {login, signUp  } from '../controllers/userController.js'
-import { getProducts, postProducts } from '../controllers/productController.js'
+import { getProductDetails, getProducts, postProducts } from '../controllers/productController.js'
+import { checkAuth } from '../middleware/checkauth.js'
 
 const router = express.Router()
 
 router.post('/register',signUp)
 router.post('/login',login)
 router.post('/products',postProducts)
-router.get('/get',getProducts)
+router.get('/get',checkAuth,getProducts)
+router.get('/getProducts/:id',getProductDetails)
 
 export default router

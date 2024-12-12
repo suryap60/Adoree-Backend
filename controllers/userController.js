@@ -49,7 +49,7 @@ const signUp = async (req, res) => {
 
       res
         .status(201)
-        .json({ message: "User created successfully!", user: newUser });
+        .json({ message: "User created successfully!",  user: newUser });
     }
   } catch (error) {
     res.status(500).json({ error: "An error occurred: " + error.message });
@@ -66,15 +66,7 @@ const login = async (req, res) => {
       password,
       existingUser.password
     );
-    // console.log(validPassword)
-
-    // console.log(existingUser.id);
-
-    // if (!existingUser) {
-    //   res.status(500).json({ message: "Please SignUp" });
-    // }
-
-    // console.log(validPassword);                
+                 
 
     if (!existingUser || !validPassword) {
       return res.status(500).json({ message: "Invalid Password or Email" });
