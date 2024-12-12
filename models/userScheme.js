@@ -1,5 +1,19 @@
 import mongoose from "mongoose";
 
+
+const cartItemSchema = new mongoose.Schema({
+    productId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Product', 
+        required: true 
+    },  
+    quantity: { 
+        type: Number, 
+        default: 1, 
+        required: true 
+    }  
+});
+
 const userSchema = new mongoose.Schema({
     username:{
         type:String,
@@ -23,6 +37,10 @@ const userSchema = new mongoose.Schema({
         excludeSimilarCharacters: true,
         strict: true,
 
+    },
+    cart:{
+        type:[cartItemSchema],
+        default:[],
     }
 })
 const User =mongoose.model('user',userSchema)
