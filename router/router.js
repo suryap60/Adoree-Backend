@@ -3,6 +3,7 @@ import {login, signUp  } from '../controllers/userController.js'
 import { getProductDetails, getProducts, postProducts } from '../controllers/productController.js'
 import { checkAuth } from '../middleware/checkauth.js'
 import addToCart from '../controllers/cartController.js'
+import wishList from '../controllers/wishListController.js'
 
 const router = express.Router()
 
@@ -12,5 +13,6 @@ router.post('/products',postProducts)
 router.get('/get',checkAuth,getProducts)
 router.get('/getProducts/:id',getProductDetails)
 router.post('/addToCart/:id',addToCart)
+router.post('/wishList/:id',wishList)
 
 export default router

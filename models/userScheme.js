@@ -14,6 +14,7 @@ const cartItemSchema = new mongoose.Schema({
     }  
 });
 
+
 const userSchema = new mongoose.Schema({
     username:{
         type:String,
@@ -41,7 +42,16 @@ const userSchema = new mongoose.Schema({
     cart:{
         type:[cartItemSchema],
         default:[],
-    }
+    },
+    wishlist:[{
+            productId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Product', 
+            },
+          },
+        ]
+        
+    
 })
 const User =mongoose.model('user',userSchema)
 export default User
