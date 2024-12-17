@@ -49,8 +49,19 @@ const userSchema = new mongoose.Schema({
               ref: 'Product', 
             },
           },
-        ]
-        
+        ],
+
+    purchase:[{
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product', 
+        },
+        quantity:{
+            type:Number,
+        }
+      },
+    ],
+    
     
 })
 const User =mongoose.model('user',userSchema)

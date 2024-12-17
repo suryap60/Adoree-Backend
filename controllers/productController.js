@@ -1,11 +1,11 @@
 import Product from "../models/productSchema.js"
-import { Model } from "mongoose";
+// import { Model } from "mongoose";
 
 
 const postProducts = async (req,res )=>{
 
     try{
-        const {name , size , price ,quantity } = req.body;
+        const {name , size , price ,category,quantity } = req.body;
 
         const existingProducts = await Product.find({name})
         console.log(existingProducts)
@@ -13,7 +13,7 @@ const postProducts = async (req,res )=>{
             res.status(201).json({message:'Product already added'})
         }
 
-        const newProduct = new Product ({name , size , price, quantity})
+        const newProduct = new Product ({name , size , price,category, quantity})
 
         await newProduct.save()
 
@@ -68,4 +68,24 @@ const getProductDetails = async(req,res)=>{
 
 }
 
-export {getProducts,postProducts,getProductDetails}
+
+const getProductsCategory = async (req,res)=>{
+
+    try{
+        const category = req.query.category
+
+    const products = await Product.find({category})
+
+    if(products.length < 0){
+        res.status(501).json({message:"The Category doesn't exist"})
+    }
+
+    res.status(201).json({message:"Successfully get product",products})
+    }
+    catch(error){
+        res.status(401).json({error:error.message})
+    }
+
+ }
+
+export {getProducts,postProducts,getProductDetails,getProductsCategory}
