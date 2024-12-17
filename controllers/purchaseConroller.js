@@ -1,5 +1,5 @@
 import User from "../models/userScheme.js"
-import addToCart from "./cartController.js"
+
 
 const purchase = async(req,res)=>{
 
@@ -12,23 +12,23 @@ const purchase = async(req,res)=>{
         console.log(cart)
 
         if(!user){
-            res.status(401).json({message:"Please SignUp"})
+            return res.status(401).json({message:"Please SignUp"})
         }
 
         let purchase = user.purchase || [];
 
-        if(!cart){
-            res.status(401).json({message:"Cart is already empty"})
+        if(!cart || cart.length ===0){
+            return res.status(401).json({message:"Cart is already empty"})
         }
 
         purchase.push(...cart)
         cart.splice(0, cart.length);
         user.purchase = purchase;
         await user.save();
-        res.status(201).json({message:"Products purchased successfully",purchase})
+        return res.status(201).json({message:"Products purchased successfully",purchase})
     }
     catch(error){
-        res.status(401).json({error:error.message})
+        return res.status(401).json({error:error.message})
     }
 
 
