@@ -6,6 +6,7 @@ import  { addToCart, getCartItems } from '../controllers/cartController.js'
 import wishList from '../controllers/wishListController.js'
 import purchase from '../controllers/purchaseConroller.js'
 import { adminLogin, signUpAdmin } from '../controllers/adminController.js'
+import { viewUsers } from '../controllers/adminUserController.js'
 
 const router = express.Router()
 
@@ -21,5 +22,6 @@ router.post('/:id/purchase',purchase)
 router.get('/cartItems/:id',getCartItems)
 router.get('/adminSignUp',signUpAdmin)
 router.get('/adminLogin',adminLogin)
+router.get('/viewUsers/:id',viewUsers)
 
 export default router
