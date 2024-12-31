@@ -21,7 +21,7 @@ const signUpAdmin = async (req, res) => {
   
       if (!validatePassword(password)) {
         return res
-        .status(400)
+        .status(401)
         .json({
           message: "Password must be between 8 and 20 characters long, contain at least one letter, one number, and one special character."
         });
@@ -29,7 +29,7 @@ const signUpAdmin = async (req, res) => {
   
       if(!validateEmail(email)){
         return res
-        .status(400)
+        .status(401)
         .json({
           message: "Enter a validate email"
         });
@@ -67,14 +67,8 @@ const signUpAdmin = async (req, res) => {
 
       const admin =  await User.findOne({email})
 
-      
 
-      // const admin = {
-      //   email : "admin@gmail.com",
-      //   password:"admin@098"
-      // }
-
-      if(email === "admin@gmail.com" || password === "admin@098"){
+      if(email === "admin@gmail.com" && password === "admin@098"){
         const accessToken = generateAccessToken(admin.id);
         return res.status(201).json({message:"Admin Login Successfully",admindata:admin,accessToken})
       }
@@ -82,7 +76,7 @@ const signUpAdmin = async (req, res) => {
       return res.status(401).json({message:"Incorrect emailId or Password"})
 
     }catch(error){
-      return res.status(402).json({error:error.message})
+      return res.status(500).json({error:error.message})
     }
   }
 

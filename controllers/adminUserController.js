@@ -1,36 +1,48 @@
 import User from "../models/userScheme.js"
-import { generateAccessToken } from "../utils/jwt.js"
+
 
 const viewUsers = async(req,res)=>{
 
     try{
-        const adminId= req.params.id
-
-        const admin = await User.findById(adminId)
-
-
-        if(!admin){
-            return res.status(401).json({message:'Admin not Found'})
-        }
-
-        const accessToken = generateAccessToken(admin.id);
-        
-        // res.status(201).json({message:"Admin Login Successfully",admin,accessToken})
-
-        
+       
         const users = await User.find()
 
         if(users.length === 0 ){
-            return res.status(401).json({message:"User Not Found"})
+            return res.status(404).json({message:"User Not Found"})
         }
 
         return res.status(200).json({ message: "Users fetched successfully", users });
 
     }
     catch(error){
-        return res.status(401).json({error:error.message})
+        return res.status(500).json({error:error.message})
     }
 
 }
 
-export {viewUsers}
+const viewSpecificUser = async(req,res)=>{
+
+    try{
+        
+     const userId = req.params.id
+
+     const user = await User.findById(userId)
+     console.log(user)
+
+
+
+    if(!user){
+        return res.status(404).json({message:"User Not Found"})
+    }
+
+    
+    return res.status(200).json({message:"Found User Successfully",user})
+
+    }
+    catch(error){
+        return res.status(500).json({error:error.message})
+    }
+
+}   
+
+export {viewUsers,viewSpecificUser}

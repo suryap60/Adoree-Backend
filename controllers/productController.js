@@ -1,5 +1,5 @@
 import Product from "../models/productSchema.js"
-// import { Model } from "mongoose";
+
 
 
 const postProducts = async (req,res )=>{
