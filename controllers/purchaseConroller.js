@@ -33,4 +33,19 @@ const purchase = async(req,res)=>{
 
 
 }
-export default purchase
+
+const viewPurchaseProducts = async(req,res)=>{
+
+   try
+   {
+    const purchase = User.purchase
+    const purchaseItem = await User.find({ purchase})
+    console.log(purchaseItem)
+    return res.status(200).json({message:"Find all purchase Products",purchaseItem})
+    
+   }
+   catch(error){
+    res.status(500).json({error:error.message})
+   }
+}
+export  {purchase,viewPurchaseProducts}

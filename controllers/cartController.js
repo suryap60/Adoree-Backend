@@ -1,92 +1,122 @@
-import Product from "../models/productSchema.js"
-import User from "../models/userScheme.js"
+import Product from "../models/productSchema.js";
+import User from "../models/userScheme.js";
+import mongoose from "mongoose";
 
-const addToCart = async(req,res)=>{
+const addToCart = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const productId = req.body.productId;
 
-    try{
+    const product = await Product.findById(productId);
+    const user = await User.findById(userId);
 
-    const userId= req.params.id
-    const productId =req.body.productId
-    
-    const product= await Product.findById(productId)
-    const user= await User.findById(userId)
-    
+    console.log(user);
+    console.log(product);
 
-    console.log(user)
-    console.log(product)
-
-    if(!product){
-        return res.status(401).json({message:'Product Not Found'})
+    if (!product) {
+      return res.status(404).json({ message: "Product Not Found" });
     }
 
-    
-    if(!user){
-        return res.status(401).json({message:"User Not Found"})
+    if (!user) {
+      return res.status(404).json({ message: "User Not Found" });
     }
 
     let cart = user.cart || [];
+    const price = product.price;
+    
 
-    const existingProduct = cart.find((items)=>items.productId.toString() === productId )
-    // 
+    const existingProduct = cart.find(
+      (items) => items.productId.toString() === productId
+    );
+    
 
-
-    if(existingProduct){
-        existingProduct.quantity +=1;
-    }else{
-        cart.push({productId:product._id,quantity:1})
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+      existingProduct.price = existingProduct.quantity * price;
+      
+    } else {
+      cart.push({
+        productId: product._id,
+        quantity: 1,
+        price:price,  
+      });
     }
+
+
 
     user.cart = cart;
     await user.save();
 
-    res.status(201).json({message:"Product added to the cart ",cart})
-    }
-    catch(error){
-        res.status(401).json({error:error.message})
-    }
+     console.log(user)
+    res.status(201).json({ message: "Product added to the cart ", cart });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
-}
-
-
-const getCartItems = async(req,res)=>{
-
-   try{
+const getCartItems = async (req, res) => {
+  try {
     const userId = req.params.id;
 
-    const user = await User.findById(userId)
+    const user = await User.findById(userId);
 
-    if(!user){
-        return res.status(401).json({message:"User Not Found"})
+    if (!user) {
+      return res.status(401).json({ message: "User Not Found" });
     }
 
-    const cartItems = user.cart
+    const cartItems = user.cart;
 
-    if(!cartItems || cartItems.length === 0){
-        return res.status(401).json({message:"Cart is empty"})
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(401).json({ message: "Cart is empty" });
     }
 
+    return res
+      .status(201)
+      .json({ message: "Successfully get cartItems", cart: cartItems });
+  } catch (error) {
+    return res.status(401).json({ error: error.message });
+  }
+};
+
+const viewTotalCartItems = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(401).json({ message: "User Not Found" });
+    }
+
+    const cartItems = user.cart;
+
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(401).json({ message: "Cart is empty" });
+    }
+    // console.log(user);
     const result = await User.aggregate([
-        { $match: { _id: userId } },  // Match the user by ID
-        { $unwind: "$cart" },  // Unwind the cart array to process each item
-        {
-           $group: {
-              _id: null,  // Group all items into one result
-              totalQuantity: { $sum: "$cart.quantity" },  // Sum the quantities
-              totalPrice: { $sum: { $multiply: ["$cart.price", "$cart.quantity"] } }  // Calculate total price
-           }
-        }
-     ]);
+      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+      { $unwind: "$cart" },
+      {
+        $group: {
+          _id: "$_id", // Group by the user ID
+          totalQuantity: { $sum: "$cart.quantity" }, // Sum the quantities of all items in the cart
+          totalPrice: { $sum: "$cart.price" },
+        },
+      },
+    ]);
 
-     // If the aggregation result is not empty, extract the totals
-     const totalQuantity = result.length > 0 ? result[0].totalQuantity : 0;
-     const totalPrice = result.length > 0 ? result[0].totalPrice : 0;
+    console.log("Aggregation Result:", result);
 
-    return res.status(201).json({message:"Successfully get cartItems",cart:cartItems,totalQuantity: totalQuantity,totalPrice: totalPrice})
-   }
-   catch(error){
-    return res.status(401).json({error:error.message})
-   }
-}
+    // Extract total quantity from the aggregation result
+    // const totalQuantity = result.length > 0 ? result[0].totalQuantity : 1;
 
+    return res
+      .status(201)
+      .json({ message: "Successfully get cartItems", result });
+  } catch (error) {
+    return res.status(401).json({ error: error.message });
+  }
+};
 
-export  {addToCart,getCartItems}
+export { addToCart, getCartItems, viewTotalCartItems };

@@ -11,7 +11,12 @@ const cartItemSchema = new mongoose.Schema({
         type: Number, 
         default: 1, 
         required: true 
-    }  
+    } ,
+    price: {
+        type:Number,
+        required:true
+
+    }
 });
 
 
@@ -51,16 +56,16 @@ const userSchema = new mongoose.Schema({
           },
         ],
 
-    purchase:[{
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Product', 
-        },
-        quantity:{
-            type:Number,
-        }
-      },
-    ],
+    // purchase:[{
+    //     productId: {
+    //       type: mongoose.Schema.Types.ObjectId,
+    //       ref: 'Product', 
+    //     },
+    //     quantity:{
+    //         type:Number,
+    //     }
+    //   },
+    // ],
     
     
 })
