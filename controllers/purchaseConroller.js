@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import User from "../models/userScheme.js"
 
 
@@ -38,10 +39,36 @@ const viewPurchaseProducts = async(req,res)=>{
 
    try
    {
-    const purchase = User.purchase
-    const purchaseItem = await User.find({ purchase})
-    console.log(purchaseItem)
-    return res.status(200).json({message:"Find all purchase Products",purchaseItem})
+
+    const userId = req.params.id
+
+    const user = await User.findById(userId)
+
+    if(!user){
+        return res.status(404).json({message:"User Not Found"})
+    }
+
+    let purchaceItems = user.purchase
+
+    if(!purchaceItems || purchaceItems.length === 0){
+        return res.status(404).json({message:"No Items Purchased"})
+    }
+    
+    const result = await User.aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+        {$unwind:"$purchase"},
+        {
+            $group:{
+                _id: "$_id", // Group by the user ID,
+                totalQuantity: { $sum: "$purchase.quantity" }, // Sum the quantities of all items in the cart
+                totalPrice: { $sum: "$purchase.price" },    
+            },
+        }
+
+        
+    ])
+    console.log("Aggregation Result:", result);
+    return res.status(200).json({message:"Find all purchased Products",result})
     
    }
    catch(error){

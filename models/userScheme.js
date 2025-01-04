@@ -56,16 +56,20 @@ const userSchema = new mongoose.Schema({
           },
         ],
 
-    // purchase:[{
-    //     productId: {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: 'Product', 
-    //     },
-    //     quantity:{
-    //         type:Number,
-    //     }
-    //   },
-    // ],
+    purchase:[{
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product', 
+        },
+        quantity:{
+            type:Number,
+        },
+        price:{
+            type:Number,
+            required:true,
+        }
+      },
+    ],
     
     
 })

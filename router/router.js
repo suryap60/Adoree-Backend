@@ -33,6 +33,7 @@ router.post('/createProduct',checkAdmin,createProduct)
 router.delete('/deleteProduct',checkAdmin,deleteProduct)
 router.put('/updateProduct/:id',checkAdmin,updateProduct)
 router.get('/viewTotalCartItems/:id',checkAdmin,viewTotalCartItems)
+router.get('/viewPurchaseProducts/:id',checkAdmin,viewPurchaseProducts)
 
 
 export default router

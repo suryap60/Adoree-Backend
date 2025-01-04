@@ -67,7 +67,7 @@ const deleteProduct = async(req,res)=>{
         const {name} = req.body
         const product = await Product.findOneAndDelete({name})
 
-        if(!product){
+        if(!product){ 
             return res.status(401).json({message:"Product Not Found"})
         }
 
