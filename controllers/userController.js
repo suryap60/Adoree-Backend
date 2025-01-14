@@ -38,7 +38,7 @@ const signUp = async (req, res) => {
 
     if (existingUser) {
       return res
-      .status(500)
+      .status(409)
       .json({ message: "email is already existing" });
     
     } else {
@@ -46,6 +46,7 @@ const signUp = async (req, res) => {
       // console.log(hashed)
       const newUser = new User({ username, email, password: hashedPassword });
       await newUser.save();
+      // console.log(newUser)
 
       res
         .status(201)
@@ -69,7 +70,7 @@ const login = async (req, res) => {
                  
 
     if (!existingUser || !validPassword) {
-      return res.status(500).json({ message: "Invalid Password or Email" });
+      return res.status(401).json({ message: "Invalid Password or Email" });
     }
     
     const accessToken = generateAccessToken(existingUser.id);

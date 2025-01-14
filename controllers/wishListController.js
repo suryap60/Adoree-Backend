@@ -8,13 +8,8 @@ const wishList = async(req,res)=>{
     const userId = req.params.id
     const productId = req.body.productId 
 
-
-    // console.log(productId)
-    // console.log(userId)
-
-
-    const product= await Product.findById(productId)
-    const user = await User.findById(userId)
+    const product= await Product.findById({_id:productId})
+    const user = await User.findById({_id:userId})
 
     if(!user || !product){
         return res.status(401).json({message:"UserID or ProductID  Not Found"})

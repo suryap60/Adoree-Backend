@@ -7,7 +7,7 @@ const purchase = async(req,res)=>{
     try{
         const userId = req.params.id
 
-        const user = await User.findById(userId)
+        const user = await User.findById({_id:userId})
 
         const cart = user.cart
         console.log(cart)
@@ -42,7 +42,7 @@ const viewPurchaseProducts = async(req,res)=>{
 
     const userId = req.params.id
 
-    const user = await User.findById(userId)
+    const user = await User.findById({_id:userId})
 
     if(!user){
         return res.status(404).json({message:"User Not Found"})
@@ -60,7 +60,7 @@ const viewPurchaseProducts = async(req,res)=>{
         {
             $group:{
                 _id: "$_id", // Group by the user ID,
-                totalQuantity: { $sum: "$purchase.quantity" }, // Sum the quantities of all items in the cart
+                totalQuantity: { $sum: "$purchase.quantity" }, 
                 totalPrice: { $sum: "$purchase.price" },    
             },
         }

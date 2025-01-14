@@ -16,7 +16,7 @@ const checkAuth = (req,res,next)=>{
         const tokenValid = verifyToken(token)
 
         if(!tokenValid){
-            return res.status(500).json({message:'You are not Authorized'})
+            return res.status(401).json({message:'You are not Authorized'})
 
         }
         

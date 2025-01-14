@@ -23,7 +23,7 @@ const viewSpecificProduct = async(req,res)=>{
    try{
    
     const productId = req.params.id
-    const product = await Product.findById(productId)
+    const product = await Product.findById({_id:productId})
 
     if(!product){
         return res.status(401).json({message:"Product Not Found"})
@@ -64,11 +64,12 @@ const createProduct = async(req,res)=>{
 
 const deleteProduct = async(req,res)=>{
     try{
-        const {name} = req.body
-        const product = await Product.findOneAndDelete({name})
-
+        const productId = req.params.id;
+        // console.log("productid",productId)
+        const product = await Product.findOneAndDelete({_id:productId})
+        // console.log(product)
         if(!product){ 
-            return res.status(401).json({message:"Product Not Found"})
+            return res.status(401).json({message:"Product Not Found"}, )
         }
 
         return res.status(201).json({message:"Product Deleted Successfully"})
@@ -85,7 +86,7 @@ const updateProduct = async(req,res)=>{
    
         const productId = req.params.id
         const updateData = req.body
-        const product = await Product.findByIdAndUpdate(productId,updateData,{new:true})
+        const product = await Product.findByIdAndUpdate({_id:productId},updateData,{new:true})
 
         if(!product){
             return res.status(404).json({message:"Product Not Found"})

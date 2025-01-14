@@ -7,8 +7,8 @@ const addToCart = async (req, res) => {
     const userId = req.params.id;
     const productId = req.body.productId;
 
-    const product = await Product.findById(productId);
-    const user = await User.findById(userId);
+    const product = await Product.findById({_id:productId});
+    const user = await User.findById({_id:userId});
 
     console.log(user);
     console.log(product);
@@ -58,7 +58,7 @@ const getCartItems = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    const user = await User.findById(userId);
+    const user = await User.findById({_id:userId});
 
     if (!user) {
       return res.status(401).json({ message: "User Not Found" });
@@ -82,7 +82,7 @@ const viewTotalCartItems = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    const user = await User.findById(userId);
+    const user = await User.findById({_id:userId});
 
     if (!user) {
       return res.status(401).json({ message: "User Not Found" });

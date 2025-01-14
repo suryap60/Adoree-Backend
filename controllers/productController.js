@@ -8,8 +8,8 @@ const postProducts = async (req,res )=>{
         const {name , size , price ,category,quantity } = req.body;
 
         const existingProducts = await Product.find({name})
-        console.log(existingProducts)
-        if(existingProducts.length < 0){
+        // console.log(existingProducts)
+        if(existingProducts < 0){
             res.status(201).json({message:'Product already added'})
         }
 
@@ -29,11 +29,11 @@ const getProducts = async (req,res)=>{
     try{
         
         const products = await Product.find()
-        console.log(products)
+        // console.log(products)
         
 
     if(products.length === 0 ){
-        return res.status(401).json({message:"No Products Found"})
+        return res.status(404).json({message:"No Products Found"})
     }
 
     res.status(201).json({message:'successfully get all products',product:products})
@@ -50,8 +50,8 @@ const getProductDetails = async(req,res)=>{
     const productId = req.params.id
     // const userName =req.query.name
 
-    const products = await Product.findById(productId)
-    console.log(products)
+    const products = await Product.findById({_id:productId})
+    // console.log(products)
 
     if(!products){
         return res.status(401).json({message:"No Product Found"})

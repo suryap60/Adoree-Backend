@@ -26,7 +26,7 @@ const viewSpecificUser = async(req,res)=>{
         
      const userId = req.params.id
 
-     const user = await User.findById(userId)
+     const user = await User.findById({_id:userId})
      console.log(user)
 
 
